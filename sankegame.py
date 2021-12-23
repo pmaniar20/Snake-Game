@@ -24,17 +24,30 @@ def close():
     close.hideturtle()
     close.goto(0,0)
     close.write("Press ESC again to exit", align="center", font = ("Courier", 24, "normal"))
-    scn.listen()
+    #scn.listen()
     while True:
         try:
             if keyboard.is_pressed('Escape'):
+               # close.write("Pressed esc key", align="center", font = ("Courier", 24, "normal"))
                 exitprogram()
                 break
         except:
             break
     
-    close.clear() 
+    #close.clear() 
 
+#congratulations screen
+def congratulations():
+    cg=turtle.Turtle()
+    cg.speed(0)
+    cg.color("Yellow")
+    cg.penup()
+    cg.hideturtle()
+    cg.goto(0,0)
+    cg.write("CONGRATULATIONS", align="center", font=("Courier", 30, "normal"))
+    time.sleep(2)
+    #scn.listen()
+    exitprogram()
 
 #game over screen
 def gameover():
@@ -46,7 +59,7 @@ def gameover():
     gm.goto(0,0)
     gm.write("GAME OVER", align="center", font=("Courier", 30, "normal"))
     time.sleep(2)
-    scn.listen()
+    #scn.listen()
     scn.onkeypress(gm.clear())  
     
 scn=turtle.Screen()
@@ -79,8 +92,10 @@ trtl.left(90)
 trtl.color('grey')
 
 # y lines
-for i in range(-12, 13):
+for i in range(-11, 13):
 	drawy(25*(i)-12.5)
+#drawy(25*(-11)-12.5)
+#drawy(25*(12)-12.5)
 
 # set position for x lines
 trtl.right(90)
@@ -89,8 +104,10 @@ trtl.setpos(0,0)
 trtl.down()
 
 # x lines
-for i in range(-12, 13):
+for i in range(-11, 13):
 	drawx(25*(i)-12.5)
+#drawx(25*(-11)-12.5)
+#drawx(25*(12)-12.5)
 
 
 #snake body
@@ -146,6 +163,7 @@ def goRight():
  
  
 def move():
+    time.sleep(0.1)
     if head.direction=="up":
         y=head.ycor()
         head.sety(y+25)
@@ -161,18 +179,22 @@ def move():
  
  
 scn.listen()
+time.sleep(0.1)
 scn.onkeypress(goUp, "w")
 scn.onkeypress(goUp, "W")
 scn.onkeypress(goUp, 'Up')
 
+time.sleep(0.1)
 scn.onkeypress(goDown, "s")
 scn.onkeypress(goDown, "S")
 scn.onkeypress(goDown, 'Down')
 
+time.sleep(0.1)
 scn.onkeypress(goLeft, "a")
 scn.onkeypress(goLeft, "A")
 scn.onkeypress(goLeft, 'Left')
 
+time.sleep(0.1)
 scn.onkeypress(goRight, "d")
 scn.onkeypress(goRight, "D")
 scn.onkeypress(goRight, 'Right')
@@ -204,7 +226,37 @@ while True:
 	if head.distance(food)<25:
 		winsound.PlaySound("point.wav", winsound.SND_ASYNC | winsound.SND_ALIAS )
 		x=random.randrange((-260//25), (260//25))*25
-		y=random.randrange((-260//25), (260//25))*25		
+		y=random.randrange((-260//25), (260//25))*25
+
+		i=0
+		j=0
+		f=0
+		while i<=len(segments):
+			if(j>10*len(segments)):
+				f=1
+				break
+			if i==0:
+				X=head.xcor()
+				Y=head.ycor()
+			else:
+				X=segments[i-1].xcor()
+				Y=segments[i-1].ycor()
+			i=i+1
+			if abs(X-x)<25 and abs(Y-y)<25:
+				x=random.randrange((-260//25), (260//25))*25
+				y=random.randrange((-260//25), (260//25))*25
+				i=0
+				j=j+1
+
+		if j>len(segments) and f>0:
+			score=0
+			delay=0.1
+			congratulations()
+			pen.clear()
+			pen.write("Score: {} High Score: {}".format(score, high_score), align="left", font=("Comic Sans MS", 10, "normal"))
+			winsound.PlaySound('lose.wav', winsound.SND_ASYNC | winsound.SND_ALIAS )
+			
+   
 		food.goto(x, y)
 
 		# Adding segment
